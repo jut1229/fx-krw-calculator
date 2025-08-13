@@ -1,13 +1,11 @@
 <!DOCTYPE html>
-<!-- saved from url=(0044)file:///D:/Docker/jpy_twd_krw_pwa/index.html -->
 <html lang="zh-Hant">
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-
+    <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
     <meta name="theme-color" content="#2878c8" />
-    <link rel="manifest" href="file:///D:/Docker/jpy_twd_krw_pwa/manifest.webmanifest" />
-    <link rel="icon" href="file:///D:/Docker/jpy_twd_krw_pwa/icon-192.png" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="icon" href="icon-192.png" />
     <title>JPY/TWD 換 KRW 判斷器 (PWA)</title>
     <style>
       :root {
@@ -185,13 +183,7 @@
   <body>
     <div class="app">
       <header>
-        <img
-          src="file:///D:/Docker/jpy_twd_krw_pwa/icon-192.png"
-          alt="icon"
-          width="28"
-          height="28"
-          style="border-radius: 8px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3)"
-        />
+        <img src="icon-192.png" alt="icon" width="28" height="28" style="border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,.3)" />
         <h1>JPY/TWD 換 KRW 判斷器</h1>
         <span class="badge">PWA 可安裝 / 離線可用</span>
       </header>
@@ -222,7 +214,7 @@
               inputmode="numeric"
               step="1"
               placeholder="例如：200,000（不填則只判斷哪個更划算）"
-              oninput="this.value=this.value.replace(/[^0-9,]/g,&#39;&#39;);this.value=this.value.replace(/,/g,&#39;&#39;);if(this.value){this.value=Number(this.value).toLocaleString();}"
+              oninput="this.value=this.value.replace(/[^0-9]/g,'');if(this.value){this.value=Number(this.value).toLocaleString();}"
             />
           </section>
 
