@@ -207,7 +207,7 @@
           </section>
 
           <section class="card span12">
-            <label>你需要的韓元金額（KRW，可選）</label>
+            <label>你想換的韓元金額（KRW，可選）</label>
             <input
               id="krwNeed"
               type="text"
@@ -226,7 +226,7 @@
           </section>
 
           <section class="card span12">
-            <div id="summary" class="result muted">請輸入匯率與（可選）持有金額，然後按「計算」。</div>
+            <div id="summary" class="result muted"></div>
           </section>
         </div>
       </main>
@@ -256,17 +256,19 @@
 
         const baseKrw = 1000;
 
+        function reset() {
+          ["jpyKrw", "twdKrw", "jpyCost", "krwNeed"].forEach((id) => {
+            document.getElementById(id).value = "";
+          });
+          document.getElementById("jpyCost").value = "0.21";
+          document.getElementById("summary").textContent = "請輸入匯率與（可選）想換的韓元金額，然後按「計算」。";
+        }
         function init() {
           document.getElementById("calcBtn").addEventListener("click", calc);
-          document.getElementById("resetBtn").addEventListener("click", () => {
-            ["jpyKrw", "twdKrw", "jpyCost", "krwNeed"].forEach((id) => {
-              document.getElementById(id).value = "";
-            });
-            document.getElementById("jpyCost").value = "0.21";
-            document.getElementById("summary").textContent = "請輸入匯率與（可選）持有金額，然後按「計算」。";
-          });
+          document.getElementById("resetBtn").addEventListener("click", reset);
+          reset();
         }
-        init();
+        init();        
 
         function calc() {
           const jpyKrw = parseFloat($("jpyKrw").value); // 日幣 → 韓元 匯率
