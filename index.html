@@ -3,12 +3,24 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-    <meta name="theme-color" content="#2878c8" />
-    <link rel="manifest" href="manifest.webmanifest" />
-    <link rel="icon" href="icon-192.png" />
+    <meta name="theme-color" content="#81c784" />
+    <link rel="manifest" href="manifest.json" />
+    <link rel="icon" href="favicon.ico" />
     <title>JPY/TWD 換 KRW 判斷器 (PWA)</title>
     <style>
       :root {
+        --bg: #81c784; /* 更淺的綠色背景 */
+        --card: rgba(255, 255, 255, 0.15); /* 半透明白色卡片 */
+        --muted: #2f2f2f; /* 深灰色次要文字 */
+        --text: #2f2f2f; /* 深灰色主要文字 */
+        --accent: #1a5f1a; /* 深綠色強調色 */
+        --good: #2d5a2d; /* 深綠色成功狀態 */
+        --bad: #8b3a3a; /* 深紅色錯誤狀態 */
+        --radius: 18px;
+      }
+
+      /* 深色主題 */
+      [data-theme="dark"] {
         --bg: #0f1420;
         --card: #151b2c;
         --muted: #9fb0ca;
@@ -16,48 +28,128 @@
         --accent: #2878c8;
         --good: #2fbf71;
         --bad: #ff6b6b;
-        --radius: 18px;
       }
+
       * {
         box-sizing: border-box;
       }
       body {
         margin: 0;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans TC", "PingFang TC", "Heiti TC",
-          "Microsoft JhengHei", Arial, sans-serif;
-        background: radial-gradient(1200px 800px at 20% -10%, #1a2440 0%, #0f1420 60%, #0b0f19 100%);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans TC", "PingFang TC", "Heiti TC", "Microsoft JhengHei", Arial, sans-serif;
+        background: var(--bg);
         color: var(--text);
         min-height: 100vh;
         display: grid;
         place-items: center;
         padding: 24px;
+        transition: background-color 0.3s ease, color 0.3s ease;
+        font-size: 16px; /* 增加基礎字體大小 */
       }
+
+      /* 深色主題背景漸變 */
+      [data-theme="dark"] body {
+        background: radial-gradient(1200px 800px at 20% -10%, #1a2440 0%, #0f1420 60%, #0b0f19 100%);
+      }
+
       .app {
         width: 100%;
         max-width: 840px;
+        background: var(--card);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: var(--radius);
+        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        overflow: hidden;
+        backdrop-filter: blur(10px);
+        transition: background-color 0.3s ease, border-color 0.3s ease;
+      }
+
+      /* 深色主題卡片樣式 */
+      [data-theme="dark"] .app {
         background: rgba(21, 27, 44, 0.9);
         border: 1px solid #223;
-        border-radius: var(--radius);
         box-shadow: 0 30px 60px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.04);
-        overflow: hidden;
       }
+
       header {
         padding: 20px 24px;
-        border-bottom: 1px solid #223;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.3);
         display: flex;
         align-items: center;
         gap: 12px;
+        transition: border-color 0.3s ease;
       }
+
+      [data-theme="dark"] header {
+        border-bottom: 1px solid #223;
+      }
+
       header h1 {
-        font-size: 20px;
+        font-size: 24px; /* 增加標題字體大小 */
         margin: 0;
         letter-spacing: 0.3px;
+        color: var(--text);
+        transition: color 0.3s ease;
       }
       header .badge {
         margin-left: auto;
-        font-size: 12px;
+        font-size: 14px; /* 增加徽章字體大小 */
         color: var(--muted);
+        transition: color 0.3s ease;
       }
+
+      /* 主題切換按鈕樣式 */
+      .theme-toggle {
+        margin-left: 12px;
+        cursor: pointer;
+        padding: 8px;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        transition: all 0.3s ease;
+        position: relative;
+      }
+
+      .theme-toggle:hover {
+        background: rgba(255, 255, 255, 0.2);
+      }
+
+      [data-theme="dark"] .theme-toggle {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      [data-theme="dark"] .theme-toggle:hover {
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      .theme-toggle svg {
+        width: 20px;
+        height: 20px;
+        fill: var(--text);
+        transition: all 0.3s ease;
+      }
+
+      .theme-toggle input {
+        display: none;
+      }
+
+      /* Swap 效果 */
+      .swap-off {
+        display: block;
+      }
+
+      .swap-on {
+        display: none;
+      }
+
+      .theme-controller:checked ~ .swap-off {
+        display: none;
+      }
+
+      .theme-controller:checked ~ .swap-on {
+        display: block;
+      }
+
       main {
         display: grid;
         gap: 16px;
@@ -70,11 +162,19 @@
       }
       .card {
         grid-column: span 12;
-        background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0));
-        border: 1px solid #223;
+        background: var(--card);
+        border: 1px solid rgba(255, 255, 255, 0.3);
         border-radius: 16px;
         padding: 14px;
+        backdrop-filter: blur(5px);
+        transition: background-color 0.3s ease, border-color 0.3s ease;
       }
+
+      [data-theme="dark"] .card {
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0));
+        border: 1px solid #223;
+      }
+
       @media (min-width: 720px) {
         .span6 {
           grid-column: span 6;
@@ -87,25 +187,87 @@
         }
       }
       label {
-        font-size: 12px;
+        font-size: 14px; /* 增加標籤字體大小 */
         color: var(--muted);
         display: block;
         margin-bottom: 6px;
+        transition: color 0.3s ease;
       }
       input {
         width: 100%;
         padding: 12px 12px;
         border-radius: 12px;
-        border: 1px solid #2a3552;
-        background: #0e1320;
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        background: rgba(255, 255, 255, 0.2);
         color: var(--text);
         outline: none;
-        transition: border 0.2s, box-shadow 0.2s;
+        transition: border 0.2s, box-shadow 0.2s, background-color 0.3s ease, color 0.3s ease;
+        backdrop-filter: blur(5px);
+        font-size: 16px; /* 增加輸入框字體大小 */
       }
+
+      [data-theme="dark"] input {
+        border: 1px solid #2a3552;
+        background: #0e1320;
+      }
+
       input:focus {
         border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(26, 95, 26, 0.25);
+      }
+
+      [data-theme="dark"] input:focus {
         box-shadow: 0 0 0 3px rgba(40, 120, 200, 0.25);
       }
+
+      input::placeholder {
+        color: rgba(47, 47, 47, 0.6);
+        transition: color 0.3s ease;
+      }
+
+      [data-theme="dark"] input::placeholder {
+        color: rgba(159, 176, 202, 0.6);
+      }
+
+      /* 下拉選單樣式 */
+      select {
+        width: 100%;
+        padding: 12px 12px;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        background: rgba(255, 255, 255, 0.2);
+        color: var(--text);
+        outline: none;
+        transition: border 0.2s, box-shadow 0.2s, background-color 0.3s ease, color 0.3s ease;
+        backdrop-filter: blur(5px);
+        font-size: 16px;
+        cursor: pointer;
+      }
+
+      [data-theme="dark"] select {
+        border: 1px solid #2a3552;
+        background: #0e1320;
+      }
+
+      select:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(26, 95, 26, 0.25);
+      }
+
+      [data-theme="dark"] select:focus {
+        box-shadow: 0 0 0 3px rgba(40, 120, 200, 0.25);
+      }
+
+      select option {
+        background: var(--card);
+        color: var(--text);
+      }
+
+      [data-theme="dark"] select option {
+        background: #0e1320;
+        color: var(--text);
+      }
+
       .row {
         display: grid;
         gap: 12px;
@@ -113,56 +275,120 @@
       }
       .btn {
         appearance: none;
-        border: 1px solid #2a3552;
-        background: #0e1320;
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        background: rgba(255, 255, 255, 0.2);
         color: var(--text);
         padding: 12px 14px;
         border-radius: 12px;
         cursor: pointer;
         font-weight: 600;
-        transition: background 0.2s, transform 0.05s ease-in;
+        transition: all 0.2s ease;
+        backdrop-filter: blur(5px);
+        font-size: 16px; /* 增加按鈕字體大小 */
       }
+
+      [data-theme="dark"] .btn {
+        border: 1px solid #2a3552;
+        background: #0e1320;
+      }
+
       .btn:hover {
-        background: #121a2b;
+        background: rgba(255, 255, 255, 0.3);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
       }
+
+      [data-theme="dark"] .btn:hover {
+        background: #1a2a3b;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      }
+
       .btn:active {
         transform: translateY(1px);
       }
       .primary {
+        background: rgba(255, 255, 255, 0.25);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+      }
+
+      [data-theme="dark"] .primary {
         background: linear-gradient(180deg, #2d7fd3, #1f66ab);
         border: none;
       }
+
       .primary:hover {
-        filter: brightness(1.05);
+        background: rgba(255, 255, 255, 0.35);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
       }
+
+      [data-theme="dark"] .primary:hover {
+        background: linear-gradient(180deg, #3a8fe0, #2a77c0);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+      }
+
       .muted {
         color: var(--muted);
-        font-size: 12px;
+        font-size: 14px; /* 增加次要文字字體大小 */
+        transition: color 0.3s ease;
       }
       .result {
         border-radius: 14px;
         padding: 12px;
+        background: rgba(255, 255, 255, 0.2);
+        border: 1px dashed rgba(255, 255, 255, 0.4);
+        backdrop-filter: blur(5px);
+        transition: background-color 0.3s ease, border-color 0.3s ease;
+        font-size: 16px; /* 增加結果區域字體大小 */
+      }
+
+      [data-theme="dark"] .result {
         background: #0e1424;
         border: 1px dashed #2a3552;
       }
+
       .pill {
         display: inline-block;
         padding: 6px 10px;
         border-radius: 999px;
-        font-size: 12px;
-        border: 1px solid #2a3552;
+        font-size: 14px; /* 增加藥丸標籤字體大小 */
+        border: 1px solid rgba(255, 255, 255, 0.4);
         color: var(--muted);
+        background: rgba(255, 255, 255, 0.2);
+        transition: all 0.3s ease;
       }
+
+      [data-theme="dark"] .pill {
+        border: 1px solid #2a3552;
+        background: transparent;
+      }
+
       .good {
+        color: #1a3d1a;
+        background: rgba(144, 238, 144, 0.4);
+        border-color: rgba(144, 238, 144, 0.6);
+      }
+
+      [data-theme="dark"] .good {
         color: #d7ffe6;
         background: rgba(47, 191, 113, 0.15);
         border-color: rgba(47, 191, 113, 0.35);
       }
+
       .bad {
+        color: #3d1a1a;
+        background: rgba(255, 182, 193, 0.4);
+        border-color: rgba(255, 182, 193, 0.6);
+      }
+
+      [data-theme="dark"] .bad {
         color: #ffe2e2;
         background: rgba(255, 107, 107, 0.12);
         border-color: rgba(255, 107, 107, 0.35);
       }
+
       .num {
         font-variant-numeric: tabular-nums;
         font-feature-settings: "tnum" 1;
@@ -171,24 +397,238 @@
         padding: 12px 16px;
         text-align: right;
         color: var(--muted);
-        font-size: 12px;
+        font-size: 14px; /* 增加頁腳字體大小 */
+        border-top: 1px solid rgba(255, 255, 255, 0.3);
+        transition: color 0.3s ease, border-color 0.3s ease;
+      }
+
+      [data-theme="dark"] footer {
         border-top: 1px solid #223;
       }
+
       .hint {
-        font-size: 12px;
+        font-size: 14px; /* 增加提示文字字體大小 */
         color: var(--muted);
+        transition: color 0.3s ease;
+      }
+
+      /* 新增：JavaScript 產生的 div 樣式 */
+      .result-item {
+        margin-bottom: 8px;
+        line-height: 1.5;
+      }
+
+      .result-indent {
+        margin-left: 1rem;
+        margin-top: 4px;
+        margin-bottom: 4px;
+      }
+
+      .result-conclusion {
+        margin-top: 12px;
+        font-weight: 600;
+      }
+
+      .result-amount {
+        margin-top: 12px;
+        font-weight: 500;
+      }
+
+      .result-bold {
+        font-weight: 600;
+        color: var(--accent);
+      }
+
+      /* 警告訊息樣式 */
+      .warning {
+        color: var(--bad);
+        background: rgba(255, 107, 107, 0.1);
+        border: 1px solid rgba(255, 107, 107, 0.3);
+        border-radius: 8px;
+        padding: 12px;
+        margin: 8px 0;
+        font-weight: 500;
+      }
+
+      [data-theme="dark"] .warning {
+        background: rgba(255, 107, 107, 0.15);
+        border: 1px solid rgba(255, 107, 107, 0.4);
+      }
+
+      /* 新增：即時換算區域樣式 */
+      .convert-section {
+        margin-bottom: 16px;
+      }
+
+      .convert-title {
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 12px;
+        display: block;
+      }
+
+      .convert-row {
+        display: flex;
+        align-items: flex-end;
+        gap: 16px;
+      }
+
+      .convert-input-group {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* 使用 order 控制順序 */
+      .convert-row .convert-arrow {
+        order: 2;
+        display: flex;
+        align-items: center;
+        height: 48px;
+        font-size: 20px;
+        color: var(--accent);
+      }
+
+      .convert-row .convert-swap-btn {
+        order: 4;
+        height: 48px;
+        align-self: flex-end;
+      }
+
+      .convert-row.cvt-krw .convert-input-group.krw-group {
+        order: 1;
+      }
+
+      .convert-row.cvt-krw .convert-input-group.twd-group {
+        order: 3;
+      }
+
+      /* 使用 order 控制順序 */
+      .convert-row.cvt-twd .convert-input-group.krw-group {
+        order: 3;
+      }
+
+      .convert-row.cvt-twd .convert-input-group.twd-group {
+        order: 1;
+      }
+
+      .convert-label {
+        font-size: 13px;
+        color: var(--muted);
+        margin-bottom: 2px;
+      }
+
+      .convert-input {
+        margin-bottom: 4px;
+      }
+
+      .convert-input[readonly] {
+        background: rgba(255, 255, 255, 0.1);
+        color: var(--accent);
+        font-weight: 500;
+        cursor: default;
+      }
+
+      [data-theme="dark"] .convert-input[readonly] {
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--accent);
+      }
+
+      .convert-swap-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 48px;
+        height: 48px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        cursor: pointer;
+        color: var(--accent);
+        transition: all 0.3s ease;
+        backdrop-filter: blur(5px);
+        margin-left: 0;
+      }
+
+      .convert-swap-btn:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: scale(1.05);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      }
+
+      .convert-swap-btn:active {
+        transform: scale(0.95);
+      }
+
+      [data-theme="dark"] .convert-swap-btn {
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.05);
+      }
+
+      [data-theme="dark"] .convert-swap-btn:hover {
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      /* 響應式設計 */
+      @media (max-width: 600px) {
+        .convert-row {
+          flex-direction: column;
+          gap: 12px;
+        }
+
+        .convert-swap-btn {
+          align-self: center;
+          margin-left: 0;
+          margin-top: 8px;
+        }
       }
     </style>
   </head>
   <body>
     <div class="app">
       <header>
-        <img src="icon-192.png" alt="icon" width="28" height="28" style="border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,.3)" />
+        <img src="icons/icon-192x192.png" alt="icon" width="28" height="28" style="border-radius: 8px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3)" />
         <h1>JPY/TWD 換 KRW 判斷器</h1>
         <span class="badge">PWA 可安裝 / 離線可用</span>
+        <label class="theme-toggle">
+          <input type="checkbox" class="theme-controller" value="dim" />
+          <svg class="swap-off" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path
+              d="M5.64,17l-.71.71a1,1,0,0,0,0,1.41,1,1,0,0,0,1.41,0l.71-.71A1,1,0,0,0,5.64,17ZM5,12a1,1,0,0,0-1-1H3a1,1,0,0,0,0,2H4A1,1,0,0,0,5,12Zm7-7a1,1,0,0,0,1-1V3a1,1,0,0,0-2,0V4A1,1,0,0,0,12,5ZM5.64,7.05a1,1,0,0,0,.7.29,1,1,0,0,0,.71-.29,1,1,0,0,0,0-1.41l-.71-.71A1,1,0,0,0,4.93,6.34Zm12,.29a1,1,0,0,0,.7-.29l.71-.71a1,1,0,1,0-1.41-1.41L17,5.64a1,1,0,0,0,0,1.41A1,1,0,0,0,17.66,7.34ZM21,11H20a1,1,0,0,0,0,2h1a1,1,0,0,0,0-2Zm-9,8a1,1,0,0,0-1,1v1a1,1,0,0,0,2,0V20A1,1,0,0,0,12,19ZM18.36,17A1,1,0,0,0,17,18.36l.71.71a1,1,0,0,0,1.41,0,1,1,0,0,0,0-1.41ZM12,6.5A5.5,5.5,0,1,0,17.5,12,5.51,5.51,0,0,0,12,6.5Zm0,9A3.5,3.5,0,1,1,15.5,12,3.5,3.5,0,0,1,12,15.5Z"
+            ></path>
+          </svg>
+          <svg class="swap-on" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path
+              d="M21.64,13a1,1,0,0,0-1.05-.14,8.05,8.05,0,0,1-3.37.73A8.15,8.15,0,0,1,9.08,5.49a8.59,8.59,0,0,1,.25-2A1,1,0,0,0,8,2.36,10.14,10.14,0,1,0,22,14.05,1,1,0,0,0,21.64,13Zm-9.5,6.69A8.14,8.14,0,0,1,7.08,5.22v.27A10.15,10.15,0,0,0,17.22,15.63a9.79,9.79,0,0,0,2.1-.22A8.11,8.11,0,0,1,12.14,19.73Z"
+            ></path>
+          </svg>
+        </label>
       </header>
       <main>
         <div class="grid">
+          <!-- 即時台幣換算區塊 -->
+          <section class="card span12 convert-section">
+            <label class="convert-title">即時台幣／韓元換算</label>
+            <div class="convert-row" id="convertRow">
+              <div class="convert-input-group krw-group" id="krwGroup">
+                <label for="convertKrw" class="convert-label">韓元 (KRW)</label>
+                <input id="convertKrw" type="number" step="1" placeholder="輸入韓元金額" class="convert-input" />
+              </div>
+              <div class="convert-arrow">➡</div>
+              <div class="convert-input-group twd-group" id="twdGroup">
+                <label for="convertTwd" class="convert-label">台幣 (TWD)</label>
+                <input id="convertTwd" type="number" step="1" placeholder="結果" class="convert-input" readonly />
+              </div>
+              <button class="convert-swap-btn" id="swapBtn" title="對調輸入框順序">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M7 17L3 13L7 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                  <path d="M17 7L21 11L17 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                  <path d="M3 13H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </button>
+            </div>
+          </section>
+
           <section class="card span4">
             <label>台幣 → 韓元 匯率（每 1 台幣可換幾韓元）</label>
             <input id="twdKrw" type="number" step="0.0001" placeholder="例如：45.2" />
@@ -201,8 +641,8 @@
           </section>
           <section class="card span4">
             <label>你的日幣成本（台幣/日圓）</label>
-            <input id="jpyCost" type="number" step="0.0001" value="0.21" />
-            <div class="hint">你買到日幣現鈔的成本，預設 0.21。</div>
+            <input id="jpyCost" type="number" step="0.0001" placeholder="例如：0.21" />
+            <div class="hint">你買到日幣現鈔的成本。</div>
           </section>
 
           <section class="card span12">
@@ -233,6 +673,32 @@
     </div>
 
     <script>
+      // 主題切換功能
+      function initTheme() {
+        const themeController = document.querySelector(".theme-controller");
+        const savedTheme = localStorage.getItem("theme") || "light";
+
+        // 設置初始主題
+        if (savedTheme === "dark") {
+          document.documentElement.setAttribute("data-theme", "dark");
+          themeController.checked = true;
+        } else {
+          document.documentElement.removeAttribute("data-theme");
+          themeController.checked = false;
+        }
+
+        // 監聽主題切換
+        themeController.addEventListener("change", function () {
+          if (this.checked) {
+            document.documentElement.setAttribute("data-theme", "dark");
+            localStorage.setItem("theme", "dark");
+          } else {
+            document.documentElement.removeAttribute("data-theme");
+            localStorage.setItem("theme", "light");
+          }
+        });
+      }
+
       async function registerSW() {
         if ("serviceWorker" in navigator) {
           try {
@@ -242,6 +708,9 @@
           }
         }
       }
+
+      // 初始化主題和 Service Worker
+      initTheme();
       registerSW();
 
       (function () {
@@ -253,21 +722,182 @@
           });
         const fmt0 = (n) => Number(n).toLocaleString(undefined);
 
-        const baseKrw = 1000;
+        const baseKrw = 1000; //每1000韓元
+
+        // 本地儲存功能
+        function saveToLocalStorage() {
+          const data = {
+            jpyKrw: $("jpyKrw").value,
+            twdKrw: $("twdKrw").value,
+            jpyCost: $("jpyCost").value,
+            krwNeed: $("krwNeed").value,
+            convertKrw: $("convertKrw").value,
+            convertTwd: $("convertTwd").value,
+          };
+          localStorage.setItem("exchangeData", JSON.stringify(data));
+        }
+
+        //載入本地儲存資料
+        function loadFromLocalStorage() {
+          const saved = localStorage.getItem("exchangeData");
+          if (saved) {
+            try {
+              const data = JSON.parse(saved);
+              $("jpyKrw").value = data.jpyKrw || "";
+              $("twdKrw").value = data.twdKrw || "";
+              $("jpyCost").value = data.jpyCost || "0.21";
+              $("krwNeed").value = data.krwNeed || "";
+              $("convertKrw").value = data.convertKrw || "";
+              $("convertTwd").value = data.convertTwd || "";
+            } catch (e) {
+              console.warn("載入本地儲存資料失敗:", e);
+            }
+          }
+        }
+
+        // 即時換算功能 - 修復邏輯
+        let isUpdating = false; // 防止無限循環
+
+        function updateConvertResult() {
+          if (isUpdating) return;
+
+          isUpdating = true;
+
+          const convertKrw = parseFloat($("convertKrw").value) || 0;
+          const convertTwd = parseFloat($("convertTwd").value) || 0;
+          const twdKrwRate = parseFloat($("twdKrw").value) || 0;
+
+          if (convertKrw > 0 && twdKrwRate > 0) {
+            // 韓元轉台幣
+            $("convertTwd").value = (convertKrw / twdKrwRate).toFixed(2);
+          } else if (convertTwd > 0 && twdKrwRate > 0) {
+            // 台幣轉韓元
+            $("convertKrw").value = (convertTwd * twdKrwRate).toFixed(0);
+          }
+
+          isUpdating = false;
+        }
+
+        // 韓元轉台幣
+        function updateKrwToTwd() {
+          if (isUpdating) return;
+
+          isUpdating = true;
+
+          const convertKrw = parseFloat($("convertKrw").value) || 0;
+          const twdKrwRate = parseFloat($("twdKrw").value) || 0;
+
+          if (convertKrw > 0 && twdKrwRate > 0) {
+            $("convertTwd").value = (convertKrw / twdKrwRate).toFixed(2);
+          }
+
+          isUpdating = false;
+        }
+
+        // 台幣轉韓元
+        function updateTwdToKrw() {
+          if (isUpdating) return;
+
+          isUpdating = true;
+
+          const convertTwd = parseFloat($("convertTwd").value) || 0;
+          const twdKrwRate = parseFloat($("twdKrw").value) || 0;
+
+          if (convertTwd > 0 && twdKrwRate > 0) {
+            $("convertKrw").value = (convertTwd * twdKrwRate).toFixed(0);
+          }
+
+          isUpdating = false;
+        }
 
         function reset() {
-          ["jpyKrw", "twdKrw", "jpyCost", "krwNeed"].forEach((id) => {
+          ["jpyKrw", "twdKrw", "jpyCost", "krwNeed", "convertKrw", "convertTwd"].forEach((id) => {
             document.getElementById(id).value = "";
           });
           document.getElementById("jpyCost").value = "0.21";
           document.getElementById("summary").textContent = "請輸入匯率與（可選）想換的韓元金額，然後按「計算」。";
+
+          // 清除本地儲存
+          localStorage.removeItem("exchangeData");
         }
+
         function init() {
+          // 載入本地儲存資料
+          loadFromLocalStorage();
+
+          // 設置初始狀態為韓元在前面
+          const convertRow = document.getElementById("convertRow");
+          convertRow.classList.add("cvt-krw");
+
+          // 綁定事件
           document.getElementById("calcBtn").addEventListener("click", calc);
           document.getElementById("resetBtn").addEventListener("click", reset);
-          reset();
+
+          // 即時換算事件 - 韓元輸入時更新台幣
+          $("convertKrw").addEventListener("input", function () {
+            updateKrwToTwd();
+          });
+
+          // 台幣輸入時更新韓元
+          $("convertTwd").addEventListener("input", function () {
+            updateTwdToKrw();
+          });
+
+          // 當匯率改變時也要更新換算結果
+          $("twdKrw").addEventListener("input", function () {
+            const convertKrw = parseFloat($("convertKrw").value) || 0;
+            const convertTwd = parseFloat($("convertTwd").value) || 0;
+
+            if (convertKrw > 0 && !$("convertKrw").readOnly) {
+              updateKrwToTwd();
+            } else if (convertTwd > 0 && !$("convertTwd").readOnly) {
+              updateTwdToKrw();
+            }
+            saveToLocalStorage();
+          });
+
+          // 自動儲存事件
+          ["jpyKrw", "jpyCost", "krwNeed"].forEach((id) => {
+            document.getElementById(id).addEventListener("input", saveToLocalStorage);
+            document.getElementById(id).addEventListener("change", saveToLocalStorage);
+          });
+
+          // 即時換算的輸入框也要儲存
+          $("convertKrw").addEventListener("input", saveToLocalStorage);
+          $("convertTwd").addEventListener("input", saveToLocalStorage);
+
+          // 對調按鈕事件
+          document.getElementById("swapBtn").addEventListener("click", function () {
+            const convertRow = document.getElementById("convertRow");
+
+            // 切換 CSS class 來改變順序
+            if (convertRow.classList.contains("cvt-twd")) {
+              // 切換回韓元在前面
+              convertRow.classList.remove("cvt-twd");
+              convertRow.classList.add("cvt-krw");
+
+              // 韓元可輸入，台幣唯讀
+              $("convertKrw").removeAttribute("readonly");
+              $("convertKrw").placeholder = "輸入韓元金額";
+              $("convertTwd").setAttribute("readonly", "");
+              $("convertTwd").placeholder = "結果";
+            } else {
+              // 切換到台幣在前面
+              convertRow.classList.remove("cvt-krw");
+              convertRow.classList.add("cvt-twd");
+
+              // 台幣可輸入，韓元唯讀
+              $("convertTwd").removeAttribute("readonly");
+              $("convertTwd").placeholder = "輸入台幣金額";
+              $("convertKrw").setAttribute("readonly", "");
+              $("convertKrw").placeholder = "結果";
+            }
+
+            // 儲存到本地
+            saveToLocalStorage();
+          });
         }
-        init();        
+        init();
 
         function calc() {
           const jpyKrw = parseFloat($("jpyKrw").value); // 日幣 → 韓元 匯率
@@ -278,7 +908,7 @@
           const krwNeed = parseFloat(krwNeedRaw);
 
           if (!(jpyKrw > 0 && twdKrw > 0 && jpyCost > 0)) {
-            document.getElementById("summary").innerHTML = "請先填寫「日幣→韓元」、「台幣→韓元」與「你的日幣成本」。";
+            document.getElementById("summary").innerHTML = '<div class="warning">請先填寫「日幣→韓元」、「台幣→韓元」與「你的日幣成本」。</div>';
             return;
           }
 
@@ -301,34 +931,30 @@
 
           // 判斷哪個划算
           const better = jpyKrw > thresholdJPY ? "用日幣換" : "用台幣換";
-          const betterReason = `（現場匯率 ${jpyKrw.toFixed(4)} ${
-            jpyKrw > thresholdJPY ? "<" : ">"
-          } 門檻匯率 ${thresholdJPY.toFixed(4)}）`;
+          const betterReason = `（現場匯率 ${jpyKrw.toFixed(4)} ${jpyKrw > thresholdJPY ? "<" : ">"} 門檻匯率 ${thresholdJPY.toFixed(4)}）`;
 
           const html = [];
-          html.push(`<div>門檻 JPY→KRW 匯率：<b>${thresholdJPY.toFixed(4)}</b> KRW</div>`);
-          html.push(`<div>現場 JPY→KRW 匯率：<b>${jpyKrw.toFixed(4)}</b> KRW</div>`);
-          html.push(`<div><span>➡ 用台幣換韓元：</span>`);
+          html.push(`<div class="result-item">門檻 JPY→KRW 匯率：<span class="result-bold">${thresholdJPY.toFixed(4)}</span> KRW</div>`);
+          html.push(`<div class="result-item">現場 JPY→KRW 匯率：<span class="result-bold">${jpyKrw.toFixed(4)}</span> KRW</div>`);
+          html.push(`<div class="result-item"><span>➡ 用台幣換韓元：</span>`);
           html.push(`
-<div style="margin-left: 1rem;">  
-    <div>每 ${baseKrw} KRW 成本 <b>${twdCostPerBaseKrw.toFixed(4)}</b> TWD</div>
-    <div>每台幣可換<b>${krwPerTwd.toFixed(2)}</b> 韓元</div>
+<div class="result-indent">  
+    <div class="result-item">每 ${baseKrw} KRW 成本 <span class="result-bold">${twdCostPerBaseKrw.toFixed(4)}</span> TWD</div>
+    <div class="result-item">每台幣可換<span class="result-bold">${krwPerTwd.toFixed(2)}</span> 韓元</div>
 </div>`);
 
-          html.push(`<div><span>➡ 用日幣換韓元：</span>`);
+          html.push(`<div class="result-item"><span>➡ 用日幣換韓元：</span>`);
           html.push(`
-<div style="margin-left: 1rem;">  
-    <div>每 ${baseKrw} KRW 成本 <b>${twdCostPerBaseKrwByJpy.toFixed(4)}</b> TWD (<b>${jpyCostPerBaseKrw.toFixed(
-            4
-          )}</b> JPY)</div>
-    <div>每台幣可換<b>${krwPerTwdByJpy.toFixed(2)}</b> 韓元（先換成日幣成本，再換成台幣）</div>
+<div class="result-indent">  
+    <div class="result-item">每 ${baseKrw} KRW 成本 <span class="result-bold">${twdCostPerBaseKrwByJpy.toFixed(4)}</span> TWD (<span class="result-bold">${jpyCostPerBaseKrw.toFixed(4)}</span> JPY)</div>
+    <div class="result-item">每台幣可換<span class="result-bold">${krwPerTwdByJpy.toFixed(2)}</span> 韓元（先換成日幣成本，再換成台幣）</div>
 </div>`);
-          html.push(`<div style="margin-top:8px;">結論：<b>${better}</b> 比較划算 ${betterReason}</div>`);
+          html.push(`<div class="result-conclusion">結論：<span class="result-bold">${better}</span> 比較划算 ${betterReason}</div>`);
 
           if (krwNeed) {
-            html.push(`<div style="margin-top:8px;">換韓元：<b>${krwNeed.toLocaleString()}</b> KRW</div>`);
-            html.push(`<div>台幣：<b>${((krwNeed / baseKrw) * twdCostPerBaseKrw).toLocaleString()}</b> TWD</div>`);
-            html.push(`<div>日幣：<b>${((krwNeed / baseKrw) * jpyCostPerBaseKrw).toLocaleString()}</b> JPY</div>`);
+            html.push(`<div class="result-amount">換韓元：<span class="result-bold">${krwNeed.toLocaleString()}</span> KRW</div>`);
+            html.push(`<div class="result-item">台幣：<span class="result-bold">${((krwNeed / baseKrw) * twdCostPerBaseKrw).toLocaleString()}</span> TWD</div>`);
+            html.push(`<div class="result-item">日幣：<span class="result-bold">${((krwNeed / baseKrw) * jpyCostPerBaseKrw).toLocaleString()}</span> JPY</div>`);
             html.push(`</div>`);
           }
 
