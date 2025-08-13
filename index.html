@@ -19,15 +19,15 @@
         --radius: 18px;
       }
 
-      /* 深色主題 */
+      /* 深色主題 - 綠色系護眼配色 */
       [data-theme="dark"] {
-        --bg: #0f1420;
-        --card: #151b2c;
-        --muted: #9fb0ca;
-        --text: #eaf2ff;
-        --accent: #2878c8;
-        --good: #2fbf71;
-        --bad: #ff6b6b;
+        --bg: #1B1F1B;
+        --card: #2A322A;
+        --muted: #AAB3AA;
+        --text: #DDE5DD;
+        --accent: #5DBB63;
+        --good: #7CD992;
+        --bad: #E57373;
       }
 
       * {
@@ -46,9 +46,9 @@
         font-size: 16px; /* 增加基礎字體大小 */
       }
 
-      /* 深色主題背景漸變 */
+      /* 深色主題背景漸變 - 綠色系護眼配色 */
       [data-theme="dark"] body {
-        background: radial-gradient(1200px 800px at 20% -10%, #1a2440 0%, #0f1420 60%, #0b0f19 100%);
+        background: radial-gradient(1200px 800px at 20% -10%, #222822 0%, #1B1F1B 60%, #161A16 100%);
       }
 
       .app {
@@ -63,11 +63,11 @@
         transition: background-color 0.3s ease, border-color 0.3s ease;
       }
 
-      /* 深色主題卡片樣式 */
+      /* 深色主題卡片樣式 - 綠色系護眼配色 */
       [data-theme="dark"] .app {
-        background: rgba(21, 27, 44, 0.9);
-        border: 1px solid #223;
-        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+        background: rgba(42, 50, 42, 0.9);
+        border: 1px solid #3A423A;
+        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.08);
       }
 
       header {
@@ -80,7 +80,7 @@
       }
 
       [data-theme="dark"] header {
-        border-bottom: 1px solid #223;
+        border-bottom: 1px solid #3A423A;
       }
 
       header h1 {
@@ -207,8 +207,8 @@
       }
 
       [data-theme="dark"] input {
-        border: 1px solid #2a3552;
-        background: #0e1320;
+        border: 1px solid #4A524A;
+        background: #222822;
       }
 
       input:focus {
@@ -217,7 +217,7 @@
       }
 
       [data-theme="dark"] input:focus {
-        box-shadow: 0 0 0 3px rgba(40, 120, 200, 0.25);
+        box-shadow: 0 0 0 3px rgba(93, 187, 99, 0.25);
       }
 
       input::placeholder {
@@ -226,7 +226,7 @@
       }
 
       [data-theme="dark"] input::placeholder {
-        color: rgba(159, 176, 202, 0.6);
+        color: rgba(170, 179, 170, 0.8);
       }
 
       /* 下拉選單樣式 */
@@ -245,8 +245,8 @@
       }
 
       [data-theme="dark"] select {
-        border: 1px solid #2a3552;
-        background: #0e1320;
+        border: 1px solid #4A524A;
+        background: #222822;
       }
 
       select:focus {
@@ -255,7 +255,7 @@
       }
 
       [data-theme="dark"] select:focus {
-        box-shadow: 0 0 0 3px rgba(40, 120, 200, 0.25);
+        box-shadow: 0 0 0 3px rgba(93, 187, 99, 0.25);
       }
 
       select option {
@@ -264,7 +264,7 @@
       }
 
       [data-theme="dark"] select option {
-        background: #0e1320;
+        background: #222822;
         color: var(--text);
       }
 
@@ -288,8 +288,8 @@
       }
 
       [data-theme="dark"] .btn {
-        border: 1px solid #2a3552;
-        background: #0e1320;
+        border: 1px solid #4A524A;
+        background: #222822;
       }
 
       .btn:hover {
@@ -299,9 +299,9 @@
       }
 
       [data-theme="dark"] .btn:hover {
-        background: #1a2a3b;
+        background: #2A322A;
         transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
       }
 
       .btn:active {
@@ -313,7 +313,7 @@
       }
 
       [data-theme="dark"] .primary {
-        background: linear-gradient(180deg, #2d7fd3, #1f66ab);
+        background: linear-gradient(180deg, #5DBB63, #4CA85A);
         border: none;
       }
 
@@ -324,9 +324,9 @@
       }
 
       [data-theme="dark"] .primary:hover {
-        background: linear-gradient(180deg, #3a8fe0, #2a77c0);
+        background: linear-gradient(180deg, #6DC973, #5DBB63);
         transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
       }
 
       .muted {
@@ -345,8 +345,8 @@
       }
 
       [data-theme="dark"] .result {
-        background: #0e1424;
-        border: 1px dashed #2a3552;
+        background: #222822;
+        border: 1px dashed #4A524A;
       }
 
       .pill {
@@ -361,7 +361,7 @@
       }
 
       [data-theme="dark"] .pill {
-        border: 1px solid #2a3552;
+        border: 1px solid #4A524A;
         background: transparent;
       }
 
@@ -372,9 +372,9 @@
       }
 
       [data-theme="dark"] .good {
-        color: #d7ffe6;
-        background: rgba(47, 191, 113, 0.15);
-        border-color: rgba(47, 191, 113, 0.35);
+        color: #E8F5E8;
+        background: rgba(124, 217, 146, 0.15);
+        border-color: rgba(124, 217, 146, 0.35);
       }
 
       .bad {
@@ -384,9 +384,9 @@
       }
 
       [data-theme="dark"] .bad {
-        color: #ffe2e2;
-        background: rgba(255, 107, 107, 0.12);
-        border-color: rgba(255, 107, 107, 0.35);
+        color: #FEF2F2;
+        background: rgba(229, 115, 115, 0.12);
+        border-color: rgba(229, 115, 115, 0.3);
       }
 
       .num {
@@ -403,7 +403,7 @@
       }
 
       [data-theme="dark"] footer {
-        border-top: 1px solid #223;
+        border-top: 1px solid #3A423A;
       }
 
       .hint {
@@ -451,8 +451,8 @@
       }
 
       [data-theme="dark"] .warning {
-        background: rgba(255, 107, 107, 0.15);
-        border: 1px solid rgba(255, 107, 107, 0.4);
+        background: rgba(229, 115, 115, 0.15);
+        border: 1px solid rgba(229, 115, 115, 0.35);
       }
 
       /* 新增：即時換算區域樣式 */
@@ -530,7 +530,7 @@
       }
 
       [data-theme="dark"] .convert-input[readonly] {
-        background: rgba(255, 255, 255, 0.05);
+        background: rgba(93, 187, 99, 0.1);
         color: var(--accent);
       }
 
@@ -561,12 +561,12 @@
       }
 
       [data-theme="dark"] .convert-swap-btn {
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid #4A524A;
+        background: rgba(93, 187, 99, 0.1);
       }
 
       [data-theme="dark"] .convert-swap-btn:hover {
-        background: rgba(255, 255, 255, 0.1);
+        background: rgba(93, 187, 99, 0.2);
       }
 
       /* 響應式設計 */
@@ -620,10 +620,13 @@
                 <input id="convertTwd" type="number" step="1" placeholder="結果" class="convert-input" readonly />
               </div>
               <button class="convert-swap-btn" id="swapBtn" title="對調輸入框順序">
+                <!-- 這個 SVG 會歪，改成直的雙向箭頭 -->
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M7 17L3 13L7 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                  <path d="M17 7L21 11L17 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                  <path d="M3 13H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                  <g>
+                    <path d="M12 5V19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M8 9L12 5L16 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M16 15L12 19L8 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </g>
                 </svg>
               </button>
             </div>
