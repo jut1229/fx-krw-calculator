@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<!-- saved from url=(0044)file:///D:/Docker/jpy_twd_krw_pwa/index.html -->
+<html lang="zh-Hant"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+    <meta name="theme-color" content="#2878c8">
+    <link rel="manifest" href="file:///D:/Docker/jpy_twd_krw_pwa/manifest.webmanifest">
+    <link rel="icon" href="file:///D:/Docker/jpy_twd_krw_pwa/icon-192.png">
+    <title>JPY/TWD 換 KRW 判斷器 (PWA)</title>
+    <style>
+      :root {
+        --bg: #0f1420;
+        --card: #151b2c;
+        --muted: #9fb0ca;
+        --text: #eaf2ff;
+        --accent: #2878c8;
+        --good: #2fbf71;
+        --bad: #ff6b6b;
+        --radius: 18px;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans TC", "PingFang TC", "Heiti TC",
+          "Microsoft JhengHei", Arial, sans-serif;
+        background: radial-gradient(1200px 800px at 20% -10%, #1a2440 0%, #0f1420 60%, #0b0f19 100%);
+        color: var(--text);
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        padding: 24px;
+      }
+      .app {
+        width: 100%;
+        max-width: 840px;
+        background: rgba(21, 27, 44, 0.9);
+        border: 1px solid #223;
+        border-radius: var(--radius);
+        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+        overflow: hidden;
+      }
+      header {
+        padding: 20px 24px;
+        border-bottom: 1px solid #223;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      header h1 {
+        font-size: 20px;
+        margin: 0;
+        letter-spacing: 0.3px;
+      }
+      header .badge {
+        margin-left: auto;
+        font-size: 12px;
+        color: var(--muted);
+      }
+      main {
+        display: grid;
+        gap: 16px;
+        padding: 16px;
+      }
+      .grid {
+        display: grid;
+        gap: 12px;
+        grid-template-columns: repeat(12, 1fr);
+      }
+      .card {
+        grid-column: span 12;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0));
+        border: 1px solid #223;
+        border-radius: 16px;
+        padding: 14px;
+      }
+      @media (min-width: 720px) {
+        .span6 {
+          grid-column: span 6;
+        }
+        .span4 {
+          grid-column: span 4;
+        }
+        .span12 {
+          grid-column: span 12;
+        }
+      }
+      label {
+        font-size: 12px;
+        color: var(--muted);
+        display: block;
+        margin-bottom: 6px;
+      }
+      input {
+        width: 100%;
+        padding: 12px 12px;
+        border-radius: 12px;
+        border: 1px solid #2a3552;
+        background: #0e1320;
+        color: var(--text);
+        outline: none;
+        transition: border 0.2s, box-shadow 0.2s;
+      }
+      input:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(40, 120, 200, 0.25);
+      }
+      .row {
+        display: grid;
+        gap: 12px;
+        grid-template-columns: 1fr 1fr;
+      }
+      .btn {
+        appearance: none;
+        border: 1px solid #2a3552;
+        background: #0e1320;
+        color: var(--text);
+        padding: 12px 14px;
+        border-radius: 12px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: background 0.2s, transform 0.05s ease-in;
+      }
+      .btn:hover {
+        background: #121a2b;
+      }
+      .btn:active {
+        transform: translateY(1px);
+      }
+      .primary {
+        background: linear-gradient(180deg, #2d7fd3, #1f66ab);
+        border: none;
+      }
+      .primary:hover {
+        filter: brightness(1.05);
+      }
+      .muted {
+        color: var(--muted);
+        font-size: 12px;
+      }
+      .result {
+        border-radius: 14px;
+        padding: 12px;
+        background: #0e1424;
+        border: 1px dashed #2a3552;
+      }
+      .pill {
+        display: inline-block;
+        padding: 6px 10px;
+        border-radius: 999px;
+        font-size: 12px;
+        border: 1px solid #2a3552;
+        color: var(--muted);
+      }
+      .good {
+        color: #d7ffe6;
+        background: rgba(47, 191, 113, 0.15);
+        border-color: rgba(47, 191, 113, 0.35);
+      }
+      .bad {
+        color: #ffe2e2;
+        background: rgba(255, 107, 107, 0.12);
+        border-color: rgba(255, 107, 107, 0.35);
+      }
+      .num {
+        font-variant-numeric: tabular-nums;
+        font-feature-settings: "tnum" 1;
+      }
+      footer {
+        padding: 12px 16px;
+        text-align: right;
+        color: var(--muted);
+        font-size: 12px;
+        border-top: 1px solid #223;
+      }
+      .hint {
+        font-size: 12px;
+        color: var(--muted);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <header>
+        <img src="file:///D:/Docker/jpy_twd_krw_pwa/icon-192.png" alt="icon" width="28" height="28" style="border-radius: 8px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3)">
+        <h1>JPY/TWD 換 KRW 判斷器</h1>
+        <span class="badge">PWA 可安裝 / 離線可用</span>
+      </header>
+      <main>
+        <div class="grid">
+          <section class="card span6">
+            <label>日幣 → 韓元 匯率（每 1 日圓可換幾韓元）</label>
+            <input id="jpyKrw" type="number" step="0.0001" placeholder="例如：9.66">
+            <div class="hint">現場看板上的「JPY → KRW」數字。</div>
+          </section>
+          <section class="card span6">
+            <label>台幣 → 韓元 匯率（每 1 台幣可換幾韓元）</label>
+            <input id="twdKrw" type="number" step="0.0001" placeholder="例如：45.2">
+            <div class="hint">現場看板上的「TWD → KRW」數字。</div>
+          </section>
+
+          <section class="card span4">
+            <label>你的日幣成本（台幣/日圓）</label>
+            <input id="jpyCost" type="number" step="0.0001" value="0.21">
+            <div class="hint">你買到日幣現鈔的成本，預設 0.21。</div>
+          </section>
+
+          <section class="card span12">
+            <label>你需要的韓元金額（KRW，可選）</label>
+            <input id="krwNeed" type="text" inputmode="numeric" step="1" placeholder="例如：200,000（不填則只判斷哪個更划算）" oninput="this.value=this.value.replace(/[^0-9,]/g,&#39;&#39;);this.value=this.value.replace(/,/g,&#39;&#39;);if(this.value){this.value=Number(this.value).toLocaleString();}">
+          </section>
+
+          <section class="card span12">
+            <div class="row">
+              <button class="btn primary" id="calcBtn">計算</button>
+              <button class="btn" id="resetBtn">清除</button>
+            </div>
+          </section>
+
+          <section class="card span12">
+            <div id="summary" class="result muted"><div>門檻 JPY→KRW 匯率：<b>9.4920</b> KRW</div><div>現場 JPY→KRW 匯率：<b>9.6600</b> KRW</div><div><span>➡ 用台幣換韓元：</span>
+<div style="margin-left: 1rem;">  
+    <div>每 1000 KRW 成本 <b>22.1239</b> TWD</div>
+    <div>每台幣可換<b>45.20</b> 韓元</div>
+</div><div><span>➡ 用日幣換韓元：</span>
+<div style="margin-left: 1rem;">  
+    <div>每 1000 KRW 成本 <b>21.7391</b> TWD (<b>103.5197</b> JPY)</div>
+    <div>每台幣可換<b>46.00</b> 韓元（先換成日幣成本，再換成台幣）</div>
+</div><div style="margin-top:8px;">結論：<b>用日幣換</b> 比較划算 （現場匯率 9.6600 &lt; 門檻匯率 9.4920）</div><div style="margin-top:8px;">換韓元：<b>200,000</b> KRW</div><div>台幣：<b>4,424.779</b> TWD</div><div>日幣：<b>20,703.934</b> JPY</div></div></div></div>
+          </section>
+        </div>
+      </main>
+      <footer>Made for quick on-the-spot exchange decisions.</footer>
+    </div>
+
+    <script>
+      async function registerSW() {
+        if ("serviceWorker" in navigator) {
+          try {
+            await navigator.serviceWorker.register("./sw.js");
+          } catch (e) {
+            console.warn("Service worker registration failed:", e);
+          }
+        }
+      }
+      registerSW();
+
+      (function () {
+        const $ = (id) => document.getElementById(id);
+        const fmt = (n, d = 4) =>
+          Number(n).toLocaleString(undefined, {
+            minimumFractionDigits: d,
+            maximumFractionDigits: d,
+          });
+        const fmt0 = (n) => Number(n).toLocaleString(undefined);
+
+        const baseKrw = 1000;
+
+        function init() {
+          document.getElementById("calcBtn").addEventListener("click", calc);
+          document.getElementById("resetBtn").addEventListener("click", () => {
+            ["jpyKrw", "twdKrw", "jpyCost", "krwNeed"].forEach((id) => {
+              document.getElementById(id).value = "";
+            });
+            document.getElementById("jpyCost").value = "0.21";
+            document.getElementById("summary").textContent = "請輸入匯率與（可選）持有金額，然後按「計算」。";
+          });
+        }
+        init();
+
+        function calc() {
+          const jpyKrw = parseFloat($("jpyKrw").value); // 日幣 → 韓元 匯率
+          const twdKrw = parseFloat($("twdKrw").value); // 台幣 → 韓元 匯率
+          const jpyCost = parseFloat($("jpyCost").value); // 你的日幣成本（台幣/日圓）
+          // 你需要的韓元金額（KRW），來源 input 可能有千分位
+          const krwNeedRaw = $("krwNeed").value.replace(/,/g, "");
+          const krwNeed = parseFloat(krwNeedRaw);
+
+          if (!(jpyKrw > 0 && twdKrw > 0 && jpyCost > 0)) {
+            document.getElementById("summary").innerHTML = "請先填寫「日幣→韓元」、「台幣→韓元」與「你的日幣成本」。";
+            return;
+          }
+
+          // 門檻 JPY→KRW 匯率
+          const thresholdJPY = twdKrw * jpyCost;
+
+          // 用台幣換韓元：每 1000 KRW 需要的 TWD 成本
+          const twdCostPerBaseKrw = baseKrw / twdKrw;
+
+          // 用日幣換韓元：每 1000 KRW 需要的 JPY 成本
+          const jpyCostPerBaseKrw = baseKrw / jpyKrw;
+
+          // 用日幣換韓元：每 1000 KRW 需要的 TWD 成本
+          const twdCostPerBaseKrwByJpy = jpyCostPerBaseKrw * jpyCost;
+
+          // 新增：每 1 台幣可以換多少韓元
+          const krwPerTwd = twdKrw; // 直接就是台幣→韓元匯率
+          // 新增：用日幣換韓元再換算成台幣，每 1 台幣可換多少韓元
+          const krwPerTwdByJpy = jpyKrw / jpyCost;
+
+          // 判斷哪個划算
+          const better = jpyKrw > thresholdJPY ? "用日幣換" : "用台幣換";
+          const betterReason = `（現場匯率 ${jpyKrw.toFixed(4)} ${
+            jpyKrw > thresholdJPY ? "<" : ">"
+          } 門檻匯率 ${thresholdJPY.toFixed(4)}）`;
+
+          const html = [];
+          html.push(`<div>門檻 JPY→KRW 匯率：<b>${thresholdJPY.toFixed(4)}</b> KRW</div>`);
+          html.push(`<div>現場 JPY→KRW 匯率：<b>${jpyKrw.toFixed(4)}</b> KRW</div>`);
+          html.push(`<div><span>➡ 用台幣換韓元：</span>`);
+          html.push(`
+<div style="margin-left: 1rem;">  
+    <div>每 ${baseKrw} KRW 成本 <b>${twdCostPerBaseKrw.toFixed(4)}</b> TWD</div>
+    <div>每台幣可換<b>${krwPerTwd.toFixed(2)}</b> 韓元</div>
+</div>`);
+
+          html.push(`<div><span>➡ 用日幣換韓元：</span>`);
+          html.push(`
+<div style="margin-left: 1rem;">  
+    <div>每 ${baseKrw} KRW 成本 <b>${twdCostPerBaseKrwByJpy.toFixed(4)}</b> TWD (<b>${jpyCostPerBaseKrw.toFixed(4)}</b> JPY)</div>
+    <div>每台幣可換<b>${krwPerTwdByJpy.toFixed(2)}</b> 韓元（先換成日幣成本，再換成台幣）</div>
+</div>`);
+          html.push(`<div style="margin-top:8px;">結論：<b>${better}</b> 比較划算 ${betterReason}</div>`);
+
+          if (krwNeed) {
+            html.push(`<div style="margin-top:8px;">換韓元：<b>${krwNeed.toLocaleString()}</b> KRW</div>`);
+            html.push(`<div>台幣：<b>${((krwNeed / baseKrw) * twdCostPerBaseKrw).toLocaleString()}</b> TWD</div>`);
+            html.push(`<div>日幣：<b>${((krwNeed / baseKrw) * jpyCostPerBaseKrw).toLocaleString()}</b> JPY</div>`);
+            html.push(`</div>`);
+          }
+
+          document.getElementById("summary").innerHTML = html.join("");
+        }
+      })();
+    </script>
+  
+
+</body></html>
