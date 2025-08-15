@@ -3,110 +3,87 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-    <meta name="theme-color" content="#81c784" />
+    <meta name="theme-color" content="#00d1b2" />
     <link rel="manifest" href="manifest.json" />
     <link rel="icon" href="favicon.ico" />
     <title>JPY/TWD 換 KRW 判斷器 (PWA)</title>
+    <!-- Bulma CSS Framework -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
     <style>
       :root {
-        --bg: #81c784; /* 更淺的綠色背景 */
-        --card: rgba(255, 255, 255, 0.15); /* 半透明白色卡片 */
-        --muted: #2f2f2f; /* 深灰色次要文字 */
-        --text: #2f2f2f; /* 深灰色主要文字 */
-        --accent: #1a5f1a; /* 深綠色強調色 */
-        --good: #2d5a2d; /* 深綠色成功狀態 */
-        --bad: #8b3a3a; /* 深紅色錯誤狀態 */
-        --radius: 18px;
+        --bulma-primary: #00d1b2;
+        --bulma-primary-light: #ebfffc;
+        --bulma-primary-dark: #00947e;
       }
 
-      /* 深色主題 - 綠色系護眼配色 */
+      /* 深色主題支援 */
       [data-theme="dark"] {
-        --bg: #1B1F1B;
-        --card: #2A322A;
-        --muted: #AAB3AA;
-        --text: #DDE5DD;
-        --accent: #5DBB63;
-        --good: #7CD992;
-        --bad: #E57373;
+        --bulma-primary: #00d1b2;
+        --bulma-primary-light: #001a1a;
+        --bulma-primary-dark: #00f5d4;
       }
 
-      * {
-        box-sizing: border-box;
-      }
-      body {
-        margin: 0;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans TC", "PingFang TC", "Heiti TC", "Microsoft JhengHei", Arial, sans-serif;
-        background: var(--bg);
-        color: var(--text);
-        min-height: 100vh;
-        display: grid;
-        place-items: center;
-        padding: 24px;
-        transition: background-color 0.3s ease, color 0.3s ease;
-        font-size: 16px; /* 增加基礎字體大小 */
+      /* 自定義樣式覆蓋 */
+      .hero.is-primary {
+        background: linear-gradient(135deg, var(--bulma-primary) 0%, var(--bulma-primary-dark) 100%);
       }
 
-      /* 深色主題背景漸變 - 綠色系護眼配色 */
+      [data-theme="dark"] .hero.is-primary {
+        background: linear-gradient(135deg, #001a1a 0%, #003333 100%);
+      }
+
       [data-theme="dark"] body {
-        background: radial-gradient(1200px 800px at 20% -10%, #222822 0%, #1B1F1B 60%, #161A16 100%);
+        background-color: #0a0a0a;
+        color: #f5f5f5;
       }
 
-      .app {
-        width: 100%;
-        max-width: 840px;
-        background: var(--card);
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        border-radius: var(--radius);
-        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-        overflow: hidden;
-        backdrop-filter: blur(10px);
-        transition: background-color 0.3s ease, border-color 0.3s ease;
+      [data-theme="dark"] .card {
+        background-color: #1a1a1a;
+        color: #f5f5f5;
       }
 
-      /* 深色主題卡片樣式 - 綠色系護眼配色 */
-      [data-theme="dark"] .app {
-        background: rgba(42, 50, 42, 0.9);
-        border: 1px solid #3A423A;
-        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      [data-theme="dark"] .input,
+      [data-theme="dark"] .select select {
+        background-color: #2a2a2a;
+        border-color: #4a4a4a;
+        color: #f5f5f5;
       }
 
-      header {
-        padding: 20px 24px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        transition: border-color 0.3s ease;
+      [data-theme="dark"] .input:focus,
+      [data-theme="dark"] .select select:focus {
+        border-color: var(--bulma-primary);
+        box-shadow: 0 0 0 0.125em rgba(0, 209, 178, 0.25);
       }
 
-      [data-theme="dark"] header {
-        border-bottom: 1px solid #3A423A;
+      [data-theme="dark"] .button {
+        background-color: #2a2a2a;
+        border-color: #4a4a4a;
+        color: #f5f5f5;
       }
 
-      header h1 {
-        font-size: 24px; /* 增加標題字體大小 */
-        margin: 0;
-        letter-spacing: 0.3px;
-        color: var(--text);
-        transition: color 0.3s ease;
-      }
-      header .badge {
-        margin-left: auto;
-        font-size: 14px; /* 增加徽章字體大小 */
-        color: var(--muted);
-        transition: color 0.3s ease;
+      [data-theme="dark"] .button:hover {
+        background-color: #3a3a3a;
+        border-color: #5a5a5a;
       }
 
-      /* 主題切換按鈕樣式 */
+      [data-theme="dark"] .button.is-primary {
+        background-color: var(--bulma-primary);
+        border-color: var(--bulma-primary);
+      }
+
+      [data-theme="dark"] .button.is-primary:hover {
+        background-color: var(--bulma-primary-dark);
+        border-color: var(--bulma-primary-dark);
+      }
+
+      /* 主題切換按鈕 */
       .theme-toggle {
-        margin-left: 12px;
         cursor: pointer;
         padding: 8px;
-        border-radius: 8px;
+        border-radius: 6px;
         background: rgba(255, 255, 255, 0.1);
         border: 1px solid rgba(255, 255, 255, 0.2);
         transition: all 0.3s ease;
-        position: relative;
       }
 
       .theme-toggle:hover {
@@ -125,7 +102,7 @@
       .theme-toggle svg {
         width: 20px;
         height: 20px;
-        fill: var(--text);
+        fill: currentColor;
         transition: all 0.3s ease;
       }
 
@@ -150,338 +127,125 @@
         display: block;
       }
 
-      main {
-        display: grid;
-        gap: 16px;
-        padding: 16px;
-      }
-      .grid {
-        display: grid;
-        gap: 12px;
-        grid-template-columns: repeat(12, 1fr);
-      }
-      .card {
-        grid-column: span 12;
-        background: var(--card);
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        border-radius: 16px;
-        padding: 14px;
-        backdrop-filter: blur(5px);
-        transition: background-color 0.3s ease, border-color 0.3s ease;
-      }
-
-      [data-theme="dark"] .card {
-        background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0));
-        border: 1px solid #223;
-      }
-
-      @media (min-width: 720px) {
-        .span6 {
-          grid-column: span 6;
-        }
-        .span4 {
-          grid-column: span 4;
-        }
-        .span12 {
-          grid-column: span 12;
-        }
-      }
-      label {
-        font-size: 14px; /* 增加標籤字體大小 */
-        color: var(--muted);
-        display: block;
-        margin-bottom: 6px;
-        transition: color 0.3s ease;
-      }
-      input {
-        width: 100%;
-        padding: 12px 12px;
-        border-radius: 12px;
-        border: 1px solid rgba(255, 255, 255, 0.4);
-        background: rgba(255, 255, 255, 0.2);
-        color: var(--text);
-        outline: none;
-        transition: border 0.2s, box-shadow 0.2s, background-color 0.3s ease, color 0.3s ease;
-        backdrop-filter: blur(5px);
-        font-size: 16px; /* 增加輸入框字體大小 */
-        -webkit-appearance: none;
-        -webkit-text-fill-color: var(--text);
-      }
-
-      [data-theme="dark"] input {
-        border: 1px solid #4A524A;
-        background: #222822;
-        -webkit-text-fill-color: var(--text);
-      }
-
-      input:focus {
-        border-color: var(--accent);
-        box-shadow: 0 0 0 3px rgba(26, 95, 26, 0.25);
-      }
-
-      [data-theme="dark"] input:focus {
-        box-shadow: 0 0 0 3px rgba(93, 187, 99, 0.25);
-      }
-
-      input::placeholder {
-        color: rgba(47, 47, 47, 0.6);
-        transition: color 0.3s ease;
-      }
-
-      [data-theme="dark"] input::placeholder {
-        color: rgba(170, 179, 170, 0.8);
-      }
-
-      /* 下拉選單樣式 */
-      select {
-        width: 100%;
-        padding: 12px 12px;
-        border-radius: 12px;
-        border: 1px solid rgba(255, 255, 255, 0.4);
-        background: rgba(255, 255, 255, 0.2);
-        color: var(--text);
-        outline: none;
-        transition: border 0.2s, box-shadow 0.2s, background-color 0.3s ease, color 0.3s ease;
-        backdrop-filter: blur(5px);
-        font-size: 16px;
-        cursor: pointer;
-        -webkit-appearance: none;
-        -webkit-text-fill-color: var(--text);
-      }
-
-      [data-theme="dark"] select {
-        border: 1px solid #4A524A;
-        background: #222822;
-        -webkit-text-fill-color: var(--text);
-      }
-
-      select:focus {
-        border-color: var(--accent);
-        box-shadow: 0 0 0 3px rgba(26, 95, 26, 0.25);
-      }
-
-      [data-theme="dark"] select:focus {
-        box-shadow: 0 0 0 3px rgba(93, 187, 99, 0.25);
-      }
-
-      select option {
-        background: var(--card);
-        color: var(--text);
-      }
-
-      [data-theme="dark"] select option {
-        background: #222822;
-        color: var(--text);
-      }
-
-      .row {
-        display: grid;
-        gap: 12px;
-        grid-template-columns: 1fr 1fr;
-      }
-      .btn {
-        appearance: none;
-        -webkit-appearance: none;
-        border: 1px solid rgba(255, 255, 255, 0.4);
-        background: rgba(255, 255, 255, 0.2);
-        color: var(--text);
-        padding: 12px 14px;
-        border-radius: 12px;
-        cursor: pointer;
-        font-weight: 600;
-        transition: all 0.2s ease;
-        backdrop-filter: blur(5px);
-        font-size: 16px; /* 增加按鈕字體大小 */
-        -webkit-text-fill-color: var(--text);
-      }
-
-      [data-theme="dark"] .btn {
-        border: 1px solid #4A524A;
-        background: #222822;
-        -webkit-text-fill-color: var(--text);
-      }
-
-      .btn:hover {
-        background: rgba(255, 255, 255, 0.3);
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-      }
-
-      [data-theme="dark"] .btn:hover {
-        background: #2A322A;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-      }
-
-      .btn:active {
-        transform: translateY(1px);
-      }
-      .primary {
-        background: rgba(255, 255, 255, 0.25);
-        border: 1px solid rgba(255, 255, 255, 0.5);
-        -webkit-text-fill-color: var(--text);
-      }
-
-      [data-theme="dark"] .primary {
-        background: linear-gradient(180deg, #5DBB63, #4CA85A);
-        border: none;
-        -webkit-text-fill-color: var(--text);
-      }
-
-      .primary:hover {
-        background: rgba(255, 255, 255, 0.35);
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-      }
-
-      [data-theme="dark"] .primary:hover {
-        background: linear-gradient(180deg, #6DC973, #5DBB63);
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
-      }
-
-      .muted {
-        color: var(--muted);
-        font-size: 14px; /* 增加次要文字字體大小 */
-        transition: color 0.3s ease;
-      }
+      /* 結果樣式 */
       .result {
-        border-radius: 14px;
-        padding: 12px;
-        background: rgba(255, 255, 255, 0.2);
-        border: 1px dashed rgba(255, 255, 255, 0.4);
-        backdrop-filter: blur(5px);
-        transition: background-color 0.3s ease, border-color 0.3s ease;
-        font-size: 16px; /* 增加結果區域字體大小 */
+        border-radius: 6px;
+        padding: 1rem;
+        background: rgba(0, 209, 178, 0.1);
+        border: 1px dashed var(--bulma-primary);
+        font-size: 1rem;
       }
 
       [data-theme="dark"] .result {
-        background: #222822;
-        border: 1px dashed #4A524A;
+        background: rgba(0, 209, 178, 0.05);
+        border-color: var(--bulma-primary);
       }
 
       .pill {
         display: inline-block;
-        padding: 6px 10px;
-        border-radius: 999px;
-        font-size: 14px; /* 增加藥丸標籤字體大小 */
-        border: 1px solid rgba(255, 255, 255, 0.4);
-        color: var(--muted);
-        background: rgba(255, 255, 255, 0.2);
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        font-size: 0.875rem;
+        border: 1px solid #dbdbdb;
+        color: #4a4a4a;
+        background: #f5f5f5;
         transition: all 0.3s ease;
       }
 
       [data-theme="dark"] .pill {
-        border: 1px solid #4A524A;
-        background: transparent;
+        border: 1px solid #4a4a4a;
+        background: #2a2a2a;
+        color: #f5f5f5;
       }
 
       .good {
-        color: #1a3d1a;
-        background: rgba(144, 238, 144, 0.4);
-        border-color: rgba(144, 238, 144, 0.6);
+        color: #257942;
+        background: rgba(72, 199, 116, 0.1);
+        border-color: #48c774;
       }
 
       [data-theme="dark"] .good {
-        color: #E8F5E8;
-        background: rgba(124, 217, 146, 0.15);
-        border-color: rgba(124, 217, 146, 0.35);
+        color: #48c774;
+        background: rgba(72, 199, 116, 0.1);
+        border-color: #48c774;
       }
 
       .bad {
-        color: #3d1a1a;
-        background: rgba(255, 182, 193, 0.4);
-        border-color: rgba(255, 182, 193, 0.6);
+        color: #cc0f35;
+        background: rgba(240, 71, 71, 0.1);
+        border-color: #f04747;
       }
 
       [data-theme="dark"] .bad {
-        color: #FEF2F2;
-        background: rgba(229, 115, 115, 0.12);
-        border-color: rgba(229, 115, 115, 0.3);
+        color: #f04747;
+        background: rgba(240, 71, 71, 0.1);
+        border-color: #f04747;
       }
 
       .num {
         font-variant-numeric: tabular-nums;
         font-feature-settings: "tnum" 1;
       }
-      footer {
-        padding: 12px 16px;
-        text-align: right;
-        color: var(--muted);
-        font-size: 14px; /* 增加頁腳字體大小 */
-        border-top: 1px solid rgba(255, 255, 255, 0.3);
-        transition: color 0.3s ease, border-color 0.3s ease;
-      }
 
-      [data-theme="dark"] footer {
-        border-top: 1px solid #3A423A;
-      }
-
-      .hint {
-        font-size: 14px; /* 增加提示文字字體大小 */
-        color: var(--muted);
-        transition: color 0.3s ease;
-      }
-
-      /* 新增：JavaScript 產生的 div 樣式 */
+      /* 結果項目樣式 */
       .result-item {
-        margin-bottom: 8px;
+        margin-bottom: 0.5rem;
         line-height: 1.5;
       }
 
       .result-indent {
         margin-left: 1rem;
-        margin-top: 4px;
-        margin-bottom: 4px;
+        margin-top: 0.25rem;
+        margin-bottom: 0.25rem;
       }
 
       .result-conclusion {
-        margin-top: 12px;
+        margin-top: 0.75rem;
         font-weight: 600;
       }
 
       .result-amount {
-        margin-top: 12px;
+        margin-top: 0.75rem;
         font-weight: 500;
       }
 
       .result-bold {
         font-weight: 600;
-        color: var(--accent);
+        color: var(--bulma-primary);
       }
 
       /* 警告訊息樣式 */
       .warning {
-        color: var(--bad);
-        background: rgba(255, 107, 107, 0.1);
-        border: 1px solid rgba(255, 107, 107, 0.3);
-        border-radius: 8px;
-        padding: 12px;
-        margin: 8px 0;
+        color: #cc0f35;
+        background: rgba(240, 71, 71, 0.1);
+        border: 1px solid #f04747;
+        border-radius: 6px;
+        padding: 0.75rem;
+        margin: 0.5rem 0;
         font-weight: 500;
       }
 
       [data-theme="dark"] .warning {
-        background: rgba(229, 115, 115, 0.15);
-        border: 1px solid rgba(229, 115, 115, 0.35);
+        background: rgba(240, 71, 71, 0.05);
+        border: 1px solid #f04747;
       }
 
-      /* 新增：即時換算區域樣式 */
+      /* 即時換算區域樣式 */
       .convert-section {
-        margin-bottom: 16px;
+        margin-bottom: 1rem;
       }
 
       .convert-title {
-        font-size: 16px;
+        font-size: 1rem;
         font-weight: 600;
-        margin-bottom: 12px;
+        margin-bottom: 0.75rem;
         display: block;
       }
 
       .convert-row {
         display: flex;
         align-items: flex-end;
-        gap: 16px;
+        gap: 1rem;
       }
 
       .convert-input-group {
@@ -490,335 +254,346 @@
         flex-direction: column;
       }
 
-      /* 使用 order 控制順序 */
-      .convert-row .convert-arrow {
-        order: 2;
+      .convert-arrow {
         display: flex;
         align-items: center;
         height: 48px;
-        font-size: 20px;
-        color: var(--accent);
+        font-size: 1.25rem;
+        color: var(--bulma-primary);
       }
 
-      .convert-row .convert-swap-btn {
-        order: 4;
-        height: 48px;
-        align-self: flex-end;
-      }
-
-      .convert-row.cvt-krw .convert-input-group.krw-group {
-        order: 1;
-      }
-
-      .convert-row.cvt-krw .convert-input-group.twd-group {
-        order: 3;
-      }
-
-      /* 使用 order 控制順序 */
-      .convert-row.cvt-twd .convert-input-group.krw-group {
-        order: 3;
-      }
-
-      .convert-row.cvt-twd .convert-input-group.twd-group {
-        order: 1;
-      }
-
-      .convert-label {
-        font-size: 13px;
-        color: var(--muted);
-        margin-bottom: 2px;
-      }
-
-      .convert-input {
-        margin-bottom: 4px;
-      }
-
-      .convert-input[readonly] {
-        background: rgba(255, 255, 255, 0.1);
-        color: var(--accent);
-        font-weight: 500;
-        cursor: default;
-        -webkit-appearance: none;
-        -webkit-user-select: none;
-        -webkit-touch-callout: none;
-        -webkit-text-fill-color: var(--accent);
-        opacity: 1;
-      }
-
-      [data-theme="dark"] .convert-input[readonly] {
-        background: rgba(93, 187, 99, 0.1);
-        color: var(--accent);
-        -webkit-text-fill-color: var(--accent);
-      }
-
-      .convert-swap-btn {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 48px;
-        height: 48px;
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 12px;
-        cursor: pointer;
-        color: var(--accent);
-        transition: all 0.3s ease;
-        backdrop-filter: blur(5px);
-        margin-left: 0;
-        -webkit-appearance: none;
-        -webkit-text-fill-color: var(--accent);
-        -webkit-user-select: none;
-        -webkit-touch-callout: none;
-        -webkit-tap-highlight-color: transparent;
-        outline: none;
-        font-family: inherit;
-        font-size: inherit;
-        line-height: 1;
-        padding: 0;
-        box-sizing: border-box;
-      }
-
-      .convert-swap-btn:hover {
-        background: rgba(255, 255, 255, 0.2);
-        transform: scale(1.05);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        -webkit-transform: scale(1.05);
-      }
-
-      .convert-swap-btn:active {
-        transform: scale(0.95);
-        -webkit-transform: scale(0.95);
-        -webkit-tap-highlight-color: transparent;
-      }
-
-      [data-theme="dark"] .convert-swap-btn {
-        border: 1px solid #4A524A;
-        background: rgba(93, 187, 99, 0.1);
-        -webkit-text-fill-color: var(--accent);
-        -webkit-tap-highlight-color: transparent;
-      }
-
-      [data-theme="dark"] .convert-swap-btn:hover {
-        background: rgba(93, 187, 99, 0.2);
-        -webkit-transform: scale(1.05);
-      }
-
-      /* SVG 圖示樣式 */
-      .convert-swap-btn svg {
-        width: 24px;
-        height: 24px;
-        fill: none;
-        stroke: currentColor;
-        stroke-width: 2;
-        stroke-linecap: round;
-        stroke-linejoin: round;
-        -webkit-user-select: none;
-        -webkit-touch-callout: none;
-        pointer-events: none;
-      }
-
-      /* 響應式設計 */
-      @media (max-width: 600px) {
+      /* 響應式調整 */
+      @media screen and (max-width: 768px) {
         .convert-row {
           flex-direction: column;
-          gap: 12px;
+          gap: 0.5rem;
         }
+        
+        .convert-arrow {
+          order: 0;
+          height: auto;
+          justify-content: center;
+          margin: 0.5rem 0;
+        }
+      }
 
-        .convert-swap-btn {
-          align-self: center;
-          margin-left: 0;
-          margin-top: 8px;
-        }
+      /* 深色主題額外調整 */
+      [data-theme="dark"] .hero.is-primary {
+        background: linear-gradient(135deg, #001a1a 0%, #003333 100%);
+      }
+
+      [data-theme="dark"] .hero.is-primary .title {
+        color: #f5f5f5 !important;
+      }
+
+      [data-theme="dark"] .tag.is-light {
+        background-color: #2a2a2a !important;
+        color: #f5f5f5 !important;
+      }
+
+      [data-theme="dark"] .footer {
+        background-color: #1a1a1a;
+        color: #f5f5f5;
+      }
+
+      [data-theme="dark"] .footer .content p {
+        color: #f5f5f5;
+      }
+
+      /* 修正輸入框唯讀狀態 */
+      [data-theme="dark"] .input[readonly] {
+        background-color: #1a1a1a;
+        color: var(--bulma-primary);
+        border-color: #4a4a4a;
+      }
+
+      /* 修正按鈕樣式 */
+      [data-theme="dark"] .button.is-small {
+        background-color: #2a2a2a;
+        border-color: #4a4a4a;
+        color: #f5f5f5;
+      }
+
+      [data-theme="dark"] .button.is-small:hover {
+        background-color: #3a3a3a;
+        border-color: #5a5a5a;
       }
     </style>
-    
+
     <!-- 啟動時先檢查網路；有網路才檢查並套用 PWA 更新（Service Worker） -->
     <script>
-    // 輕量級線上偵測：先看 navigator.onLine，再以 fetch 驗證
-    async function isOnline() {
-      if (!navigator.onLine) return false; // 快速判定
-      try {
-        // 打自己站上的小檔案，禁用快取避免離線快取誤判
-        const ctrl = new AbortController();
-        const t = setTimeout(() => ctrl.abort(), 1500);
-        const res = await fetch('./manifest.json', { cache: 'no-store', signal: ctrl.signal });
-        clearTimeout(t);
-        return res.ok;
-      } catch (e) {
-        return false;
+      // 輕量級線上偵測：先看 navigator.onLine，再以 fetch 驗證
+      async function isOnline() {
+        if (!navigator.onLine) return false; // 快速判定
+        try {
+          // 打自己站上的小檔案，禁用快取避免離線快取誤判
+          const ctrl = new AbortController();
+          const t = setTimeout(() => ctrl.abort(), 1500);
+          const res = await fetch("./manifest.json", { cache: "no-store", signal: ctrl.signal });
+          clearTimeout(t);
+          return res.ok;
+        } catch (e) {
+          return false;
+        }
       }
-    }
 
-    // 顯示更新提示條
-    function showUpdateToast(){
-      let el = document.getElementById('updateToast');
-      if (!el) {
-        el = document.createElement('div');
-        el.id = 'updateToast';
-        el.style.cssText = 'position:fixed;left:16px;right:16px;bottom:16px;background:#0e1424;color:#eaf2ff;border:1px solid #2a3552;border-radius:12px;padding:12px;display:none;z-index:9999;';
-        el.innerHTML = '有新版本可用 🎉 <button id="reloadBtn" style="margin-left:8px;padding:6px 10px;border-radius:8px;border:none;cursor:pointer;">重新載入</button>';
-        document.body.appendChild(el);
+      // 顯示更新提示條
+      function showUpdateToast() {
+        let el = document.getElementById("updateToast");
+        if (!el) {
+          el = document.createElement("div");
+          el.id = "updateToast";
+          el.style.cssText = "position:fixed;left:16px;right:16px;bottom:16px;background:#0e1424;color:#eaf2ff;border:1px solid #2a3552;border-radius:12px;padding:12px;display:none;z-index:9999;";
+          el.innerHTML = '有新版本可用 🎉 <button id="reloadBtn" style="margin-left:8px;padding:6px 10px;border-radius:8px;border:none;cursor:pointer;">重新載入</button>';
+          document.body.appendChild(el);
+        }
+        el.style.display = "block";
+        document.getElementById("reloadBtn").onclick = () => location.reload();
       }
-      el.style.display = 'block';
-      document.getElementById('reloadBtn').onclick = () => location.reload();
-    }
 
-    // 註冊 Service Worker 並在「有網路」時檢查更新
-    async function ensureSWAndMaybeUpdate(){
-      if (!('serviceWorker' in navigator)) return;
-      try {
-        const reg = await navigator.serviceWorker.register('./sw.js');
+      // 註冊 Service Worker 並在「有網路」時檢查更新
+      async function ensureSWAndMaybeUpdate() {
+        if (!("serviceWorker" in navigator)) return;
+        try {
+          const reg = await navigator.serviceWorker.register("./sw.js");
 
-        // SW 啟用後，在升級時通知 UI
-        navigator.serviceWorker.addEventListener('message', (evt) => {
-          if (evt.data?.type === 'SW_ACTIVATED' && navigator.serviceWorker.controller) {
-            showUpdateToast();
-          }
-        });
-
-        // updatefound 代表找到新 SW
-        reg.addEventListener('updatefound', () => {
-          const nw = reg.installing;
-          nw?.addEventListener('statechange', () => {
-            if (nw.state === 'installed' && navigator.serviceWorker.controller) {
+          // SW 啟用後，在升級時通知 UI
+          navigator.serviceWorker.addEventListener("message", (evt) => {
+            if (evt.data?.type === "SW_ACTIVATED" && navigator.serviceWorker.controller) {
               showUpdateToast();
             }
           });
-        });
 
-        // 僅在確認線上時才主動檢查更新
-        if (await isOnline()) {
-          reg.update();
+          // updatefound 代表找到新 SW
+          reg.addEventListener("updatefound", () => {
+            const nw = reg.installing;
+            nw?.addEventListener("statechange", () => {
+              if (nw.state === "installed" && navigator.serviceWorker.controller) {
+                showUpdateToast();
+              }
+            });
+          });
+
+          // 僅在確認線上時才主動檢查更新
+          if (await isOnline()) {
+            reg.update();
+          }
+        } catch (e) {
+          console.warn("Service worker registration failed:", e);
         }
-      } catch (e) {
-        console.warn('Service worker registration failed:', e);
       }
-    }
 
-    // 顯示線上/離線狀態小徽章（可選）
-    function attachOnlineBadge(){
-      let tag = document.getElementById('netBadge');
-      if (!tag) {
-        tag = document.createElement('div');
-        tag.id = 'netBadge';
-        tag.style.cssText = 'position:fixed;top:12px;right:12px;padding:6px 10px;border-radius:999px;font-size:12px;border:1px solid #2a3552;background:#0e1424;color:#9fb0ca;z-index:9999;';
-        document.body.appendChild(tag);
+      // 顯示線上/離線狀態小徽章（可選）
+      function attachOnlineBadge() {
+        let tag = document.getElementById("netBadge");
+        let timer = null;
+        if (!tag) {
+          tag = document.createElement("div");
+          tag.id = "netBadge";
+          tag.style.cssText = "position:fixed;top:12px;right:12px;padding:6px 10px;border-radius:999px;font-size:12px;border:1px solid #2a3552;background:#0e1424;color:#9fb0ca;z-index:9999;transition:opacity 0.3s;";
+          document.body.appendChild(tag);
+        }
+        function showBadge() {
+          tag.style.opacity = "1";
+          tag.style.display = "block";
+          if (timer) clearTimeout(timer);
+          timer = setTimeout(() => {
+            tag.style.opacity = "0";
+            setTimeout(() => {
+              tag.style.display = "none";
+            }, 300);
+          }, 5000);
+        }
+        function render() {
+          tag.textContent = navigator.onLine ? "線上 ✅" : "離線（可用快取）";
+          showBadge();
+        }
+        render();
+        window.addEventListener("online", render);
+        window.addEventListener("offline", render);
       }
-      function render(){ tag.textContent = navigator.onLine ? '線上 ✅' : '離線（可用快取）'; }
-      render();
-      window.addEventListener('online', render);
-      window.addEventListener('offline', render);
-    }
 
-    // 啟動邏輯：每次打開頁面就執行一次線上檢查；若線上再檢查更新
-    document.addEventListener('DOMContentLoaded', async () => {
-      attachOnlineBadge();
-      await ensureSWAndMaybeUpdate();
-    });
-
-    // iOS/Safari 等從背景回到前景時再檢查一次
-    window.addEventListener('pageshow', async (e) => {
-      if (e.persisted) { // bfcache 恢復
+      // 啟動邏輯：每次打開頁面就執行一次線上檢查；若線上再檢查更新
+      document.addEventListener("DOMContentLoaded", async () => {
+        attachOnlineBadge();
         await ensureSWAndMaybeUpdate();
-      }
-    });
+      });
+
+      // iOS/Safari 等從背景回到前景時再檢查一次
+      window.addEventListener("pageshow", async (e) => {
+        if (e.persisted) {
+          // bfcache 恢復
+          await ensureSWAndMaybeUpdate();
+        }
+      });
     </script>
   </head>
   <body>
-    <div class="app">
-      <header>
-        <img src="icons/icon-192x192.png" alt="icon" width="28" height="28" style="border-radius: 8px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3)" />
-        <h1>JPY/TWD 換 KRW 判斷器</h1>
-        <span class="badge">PWA 可安裝 / 離線可用</span>
-        <label class="theme-toggle">
-          <input type="checkbox" class="theme-controller" value="dim" />
-          <svg class="swap-off" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-            <path
-              d="M5.64,17l-.71.71a1,1,0,0,0,0,1.41,1,1,0,0,0,1.41,0l.71-.71A1,1,0,0,0,5.64,17ZM5,12a1,1,0,0,0-1-1H3a1,1,0,0,0,0,2H4A1,1,0,0,0,5,12Zm7-7a1,1,0,0,0,1-1V3a1,1,0,0,0-2,0V4A1,1,0,0,0,12,5ZM5.64,7.05a1,1,0,0,0,.7.29,1,1,0,0,0,.71-.29,1,1,0,0,0,0-1.41l-.71-.71A1,1,0,0,0,4.93,6.34Zm12,.29a1,1,0,0,0,.7-.29l.71-.71a1,1,0,1,0-1.41-1.41L17,5.64a1,1,0,0,0,0,1.41A1,1,0,0,0,17.66,7.34ZM21,11H20a1,1,0,0,0,0,2h1a1,1,0,0,0,0-2Zm-9,8a1,1,0,0,0-1,1v1a1,1,0,0,0,2,0V20A1,1,0,0,0,12,19ZM18.36,17A1,1,0,0,0,17,18.36l.71.71a1,1,0,0,0,1.41,0,1,1,0,0,0,0-1.41ZM12,6.5A5.5,5.5,0,1,0,17.5,12,5.51,5.51,0,0,0,12,6.5Zm0,9A3.5,3.5,0,1,1,15.5,12,3.5,3.5,0,0,1,12,15.5Z"
-            ></path>
-          </svg>
-          <svg class="swap-on" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-            <path
-              d="M21.64,13a1,1,0,0,0-1.05-.14,8.05,8.05,0,0,1-3.37.73A8.15,8.15,0,0,1,9.08,5.49a8.59,8.59,0,0,1,.25-2A1,1,0,0,0,8,2.36,10.14,10.14,0,1,0,22,14.05,1,1,0,0,0,21.64,13Zm-9.5,6.69A8.14,8.14,0,0,1,7.08,5.22v.27A10.15,10.15,0,0,0,17.22,15.63a9.79,9.79,0,0,0,2.1-.22A8.11,8.11,0,0,1,12.14,19.73Z"
-            ></path>
-          </svg>
-        </label>
-      </header>
-      <main>
-        <div class="grid">
-          <!-- 即時台幣換算區塊 -->
-          <section class="card span12 convert-section">
-            <label class="convert-title">即時台幣／韓元換算</label>
-            <div class="convert-row" id="convertRow">
-              <div class="convert-input-group krw-group" id="krwGroup">
-                <label for="convertKrw" class="convert-label">韓元 (KRW)</label>
-                <input id="convertKrw" type="number" step="1" placeholder="輸入韓元金額" class="convert-input" />
+    <section class="hero is-primary">
+      <div class="hero-body">
+        <div class="container">
+          <div class="level">
+            <div class="level-left">
+              <div class="level-item">
+                <img src="icons/icon-192x192.png" alt="icon" width="28" height="28" style="border-radius: 8px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3)" />
               </div>
-              <div class="convert-arrow" aria-label="箭頭">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle;">
-                  <path d="M4 12H20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                  <path d="M16 8L20 12L16 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
+              <div class="level-item">
+                <h1 class="title has-text-white">JPY/TWD 換 KRW 判斷器</h1>
               </div>
-              <div class="convert-input-group twd-group" id="twdGroup">
-                <label for="convertTwd" class="convert-label">台幣 (TWD)</label>
-                <input id="convertTwd" type="number" step="1" placeholder="結果" class="convert-input" readonly />
-              </div>
-              <button class="convert-swap-btn" id="swapBtn" title="對調輸入框順序">
-                <!-- 改為水平雙向箭頭 SVG -->
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <g>
-                    <path d="M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M15 8L19 12L15 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M9 16L5 12L9 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                  </g>
-                </svg>
-              </button>
             </div>
-          </section>
-
-          <section class="card span4">
-            <label>台幣 → 韓元 匯率（每 1 台幣可換幾韓元）</label>
-            <input id="twdKrw" type="number" step="0.0001" placeholder="例如：45.2" />
-            <div class="hint">現場看板上的「TWD → KRW」數字。</div>
-          </section>
-          <section class="card span4">
-            <label>日幣 → 韓元 匯率（每 1 日圓可換幾韓元）</label>
-            <input id="jpyKrw" type="number" step="0.0001" placeholder="例如：9.66" />
-            <div class="hint">現場看板上的「JPY → KRW」數字。</div>
-          </section>
-          <section class="card span4">
-            <label>你的日幣成本（台幣/日圓）</label>
-            <input id="jpyCost" type="number" step="0.0001" placeholder="例如：0.21" />
-            <div class="hint">你買到日幣現鈔的成本。</div>
-          </section>
-
-          <section class="card span12">
-            <label>你想換的韓元金額（KRW，可選）</label>
-            <input
-              id="krwNeed"
-              type="text"
-              inputmode="numeric"
-              step="1"
-              placeholder="例如：200,000（不填則只判斷哪個更划算）"
-              oninput="this.value=this.value.replace(/[^0-9]/g,'');if(this.value){this.value=Number(this.value).toLocaleString();}"
-            />
-          </section>
-
-          <section class="card span12">
-            <div class="row">
-              <button class="btn primary" id="calcBtn">計算</button>
-              <button class="btn" id="resetBtn">清除</button>
+            <div class="level-right">
+              <div class="level-item">
+                <span class="tag is-light">PWA 可安裝 / 離線可用</span>
+              </div>
+              <div class="level-item">
+                <label class="theme-toggle">
+                  <input type="checkbox" class="theme-controller" value="dim" />
+                  <svg class="swap-off" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path
+                      d="M5.64,17l-.71.71a1,1,0,0,0,0,1.41,1,1,0,0,0,1.41,0l.71-.71A1,1,0,0,0,5.64,17ZM5,12a1,1,0,0,0-1-1H3a1,1,0,0,0,0,2H4A1,1,0,0,0,5,12Zm7-7a1,1,0,0,0,1-1V3a1,1,0,0,0-2,0V4A1,1,0,0,0,12,5ZM5.64,7.05a1,1,0,0,0,.7.29,1,1,0,0,0,.71-.29,1,1,0,0,0,0-1.41l-.71-.71A1,1,0,0,0,4.93,6.34Zm12,.29a1,1,0,0,0,.7-.29l.71-.71a1,1,0,1,0-1.41-1.41L17,5.64a1,1,0,0,0,0,1.41A1,1,0,0,0,17.66,7.34ZM21,11H20a1,1,0,0,0,0,2h1a1,1,0,0,0,0-2Zm-9,8a1,1,0,0,0-1,1v1a1,1,0,0,0,2,0V20A1,1,0,0,0,12,19ZM18.36,17A1,1,0,0,0,17,18.36l.71.71a1,1,0,0,0,1.41,0,1,1,0,0,0,0-1.41ZM12,6.5A5.5,5.5,0,1,0,17.5,12,5.51,5.51,0,0,0,12,6.5Zm0,9A3.5,3.5,0,1,1,15.5,12,3.5,3.5,0,0,1,12,15.5Z"
+                    ></path>
+                  </svg>
+                  <svg class="swap-on" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path
+                      d="M21.64,13a1,1,0,0,0-1.05-.14,8.05,8.05,0,0,1-3.37.73A8.15,8.15,0,0,1,9.08,5.49a8.59,8.59,0,0,1,.25-2A1,1,0,0,0,8,2.36,10.14,10.14,0,1,0,22,14.05,1,1,0,0,0,21.64,13Zm-9.5,6.69A8.14,8.14,0,0,1,7.08,5.22v.27A10.15,10.15,0,0,0,17.22,15.63a9.79,9.79,0,0,0,2.1-.22A8.11,8.11,0,0,1,12.14,19.73Z"
+                    ></path>
+                  </svg>
+                </label>
+              </div>
             </div>
-          </section>
-
-          <section class="card span12">
-            <div id="summary" class="result muted"></div>
-          </section>
+          </div>
         </div>
-      </main>
-      <footer>Made for quick on-the-spot exchange decisions.</footer>
-    </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="columns is-multiline">
+          <!-- 即時台幣換算區塊 -->
+          <div class="column is-12">
+            <div class="card convert-section">
+              <div class="card-content">
+                <h3 class="title is-5 convert-title">即時台幣／韓元換算</h3>
+                <div class="convert-row" id="convertRow">
+                  <div class="convert-input-group krw-group" id="krwGroup">
+                    <label for="convertKrw" class="label">韓元 (KRW)</label>
+                    <div class="control">
+                      <input id="convertKrw" type="number" step="1" placeholder="輸入韓元金額" class="input" />
+                    </div>
+                  </div>
+                  <div class="convert-arrow" aria-label="箭頭">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle">
+                      <path d="M4 12H20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                      <path d="M16 8L20 12L16 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                  </div>
+                  <div class="convert-input-group twd-group" id="twdGroup">
+                    <label for="convertTwd" class="label">台幣 (TWD)</label>
+                    <div class="control">
+                      <input id="convertTwd" type="number" step="1" placeholder="結果" class="input" readonly />
+                    </div>
+                  </div>
+                  <button class="button is-small" id="swapBtn" title="對調輸入框順序">
+                    <!-- 水平雙向箭頭 SVG -->
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <g>
+                        <path d="M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        <path d="M15 8L19 12L15 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        <path d="M9 16L5 12L9 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                      </g>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="column is-4">
+            <div class="card">
+              <div class="card-content">
+                <label class="label">台幣 → 韓元 匯率（每 1 台幣可換幾韓元）</label>
+                <div class="control">
+                  <input id="twdKrw" type="number" step="0.0001" placeholder="例如：45.2" class="input" />
+                </div>
+                <p class="help">現場看板上的「TWD → KRW」數字。</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="column is-4">
+            <div class="card">
+              <div class="card-content">
+                <label class="label">日幣 → 韓元 匯率（每 1 日圓可換幾韓元）</label>
+                <div class="control">
+                  <input id="jpyKrw" type="number" step="0.0001" placeholder="例如：9.66" class="input" />
+                </div>
+                <p class="help">現場看板上的「JPY → KRW」數字。</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="column is-4">
+            <div class="card">
+              <div class="card-content">
+                <label class="label">你的日幣成本（台幣/日圓）</label>
+                <div class="control">
+                  <input id="jpyCost" type="number" step="0.0001" placeholder="例如：0.21" class="input" />
+                </div>
+                <p class="help">你買到日幣現鈔的成本。</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="column is-12">
+            <div class="card">
+              <div class="card-content">
+                <label class="label">你想換的韓元金額（KRW，可選）</label>
+                <div class="control">
+                  <input
+                    id="krwNeed"
+                    type="text"
+                    inputmode="numeric"
+                    step="1"
+                    placeholder="例如：200,000（不填則只判斷哪個更划算）"
+                    class="input"
+                    oninput="this.value=this.value.replace(/[^0-9]/g,'');if(this.value){this.value=Number(this.value).toLocaleString();}"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="column is-12">
+            <div class="card">
+              <div class="card-content">
+                <div class="field is-grouped">
+                  <div class="control">
+                    <button class="button is-primary" id="calcBtn">計算</button>
+                  </div>
+                  <div class="control">
+                    <button class="button" id="resetBtn">清除</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="column is-12">
+            <div class="card">
+              <div class="card-content">
+                <div id="summary" class="result"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="content has-text-centered">
+        <p>Made for quick on-the-spot exchange decisions.</p>
+      </div>
+    </footer>
 
     <script>
       // 主題切換功能
